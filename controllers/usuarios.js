@@ -58,19 +58,25 @@ const usuariosPut = async(req, res) => {
 }
 
 
-const usuariosDelete = (req, res) => {
+const usuariosDelete = async(req, res) => {
 
-    const { id } = req.params
+    const { _id } = req.params
         // Se borra físicamente con 
         // const usuario = await Usuario.findByIdAndDelete(id);
 
-    const usuario = await Usuario.findOneAndUpdate(id, { estado: false })
+    if (await Usuario.findById(_id)) {
+        res.json({
+            ok: true,
+            msg: 'No se puede borrar un usuario que no existe en nuestra BD'
+        })
+    } else {
+        const usuario = await Usuario.findOneAndUpdate(_id, { estado: false })
+        res.json({
+            ok: true,
+            msg: 'Se ha borrado el usuario de la BD'
+        })
+    }
 
-
-    res.json({
-        ok: true,
-        msg: 'delete api'
-    })
 }
 
 module.exports = {
