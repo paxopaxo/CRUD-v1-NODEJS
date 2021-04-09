@@ -1,37 +1,72 @@
 // const { response } = require('express')
+const bcryptjs = require('bcryptjs')
+const { validationResult } = require('express-validator')
+const Usuario = require('../models/usuarioSchema')
 
 
-const usuariosGet = (req, res = response) => {
+const usuariosGet = async(req, res = response) => {
 
-    const query = req.query; // aquí estan los argumentos que se pasan junto con el link
+    const { limite = 5, desde = 0 } = req.query; // aquí estan los argumentos que se pasan junto con el link
+
+    const filter = { estado: true }
+
+    const resp = await Promise.all([
+        Usuario.countDocuments(filter),
+        Usuario.find(filter)
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ])
+    const [total, usuarios] = resp
 
     res.json({
-        ok: true,
-        msg: 'desde el controlador',
-        query
+        total,
+        usuarios
     })
 }
-const usuariosPost = (req, res) => {
+const usuariosPost = async(req, res) => {
+    try {
+        const { nombre, correo, pass, rol } = req.body // req.body es el cuerpo de el json ( el objeto en si ) viene parseado y todo mi bro // Se desestructura para tomar únicamente los elementos del objeto necesarios
+        const usuario = new Usuario({ nombre, correo, pass, rol })
+            // encriptar la contraseña
+        const salt = bcryptjs.genSaltSync() // parametro es el número de vueltas (default =10 )
+        usuario.pass = bcryptjs.hashSync(pass, salt)
+            // guardar en bd 
+        await usuario.save()
 
-    const body = req.body // req.body es el cuerpo de el json ( el objeto en si )
-    const { id } = req.params // recibe los parametros que se reciben en el /:id
+        res.json({
+            usuario: usuario
+        })
 
-    res.json({
-        ok: true,
-        msg: 'post api',
-        id
-    })
+    } catch (error) {
+        throw new Error(error)
+    }
 }
 
-const usuariosPut = (req, res) => {
+const usuariosPut = async(req, res) => {
+    const { _id } = req.params // recibe los parametros que se reciben en el /:id
+    const { pass, google, correo, ...resto } = req.body
+        // validar contra base de datos 
+    if (pass) {
+        const salt = bcryptjs.genSaltSync()
+        resto.pass = bcryptjs.hashSync(pass, salt)
+    }
+    const usuario = await Usuario.findByIdAndUpdate(_id, resto)
+
     res.json({
-        ok: true,
-        msg: 'put api'
+        usuario
     })
 }
 
 
 const usuariosDelete = (req, res) => {
+
+    const { id } = req.params
+        // Se borra físicamente con 
+        // const usuario = await Usuario.findByIdAndDelete(id);
+
+    const usuario = await Usuario.findOneAndUpdate(id, { estado: false })
+
+
     res.json({
         ok: true,
         msg: 'delete api'
