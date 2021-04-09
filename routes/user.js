@@ -23,6 +23,10 @@ router.put('/:_id', [
     validarCampos
 ], usuariosPut)
 
-router.delete('/:id', usuariosDelete)
+router.delete('/:id', [
+    check('_id', 'El id en el link ingresado no es de mongo').isMongoId(),
+    check('_id').custom(id => existeIdEnMiDB(id)), // HAY QUE PROBAR BIEN ESTA MIERDA MAÑANA DIA 09/04/2021
+    validarCampos
+], usuariosDelete)
 
 module.exports = router
