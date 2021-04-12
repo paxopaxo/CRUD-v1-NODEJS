@@ -1,11 +1,15 @@
 const { Router } = require('express')
 const { check } = require('express-validator')
+
 const { validarCampos } = require('../middleweres/middlewere')
-const { usuariosGet, usuariosPost, usuariosPut, usuariosDelete } = require('../controllers/usuarios.js')
 const { esRolValido, emailExiste, existeIdEnMiDB } = require('../helpers/db-validators')
+
+const { usuariosGet, usuariosPost, usuariosPut, usuariosDelete } = require('../controllers/usuarios.js')
+
 const router = Router()
 
 router.get('/', usuariosGet)
+
 router.post('/', [
         check('correo', 'Esto no es correo').isEmail(),
         check('pass', 'el password debe ser de más de 6 letras').isLength({ min: 6 }),
@@ -17,15 +21,15 @@ router.post('/', [
     ], usuariosPost) // :id obtiene el id y lo parsea en req.params
 
 
-router.put('/:_id', [
+router.put('/:id', [
     check('_id', 'El id en el link ingresado no es de mongo').isMongoId(),
     check('_id').custom(id => existeIdEnMiDB(id)), // HAY QUE PROBAR BIEN ESTA MIERDA MAÑANA DIA 09/04/2021
     validarCampos
 ], usuariosPut)
 
-router.delete('/:_id', [
-    check('_id', 'El id en el link ingresado no es de mongo').isMongoId(),
-    check('_id').custom(id => existeIdEnMiDB(id)), // HAY QUE PROBAR BIEN ESTA MIERDA MAÑANA DIA 09/04/2021
+router.delete('/:id', [
+    check('id', 'El id en el link ingresado no es de mongo').isMongoId(),
+    check('id').custom(id => existeIdEnMiDB(id)), // HAY QUE PROBAR BIEN ESTA MIERDA MAÑANA DIA 09/04/2021
     validarCampos
 ], usuariosDelete)
 
