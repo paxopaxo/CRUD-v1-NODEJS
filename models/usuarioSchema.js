@@ -33,7 +33,8 @@ const usuarioSchema = mongoose.Schema({
 })
 
 usuarioSchema.methods.toJSON = function() { // cuando quiero usar el this dentro de una funcion debo usar funciones normales
-    const { __v, pass, ...usuario } = this.toObject()
+    const { __v, pass, _id, ...usuario } = this.toObject()
+    usuario.uid = _id
     return usuario;
 }
 
