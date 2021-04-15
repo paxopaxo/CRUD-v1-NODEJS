@@ -66,7 +66,8 @@ const googleSignIn = async(req, res = response) => {
             }
 
             usuario = new Usuario(data) // CREA UN NUEVO REGISTRO CON LA SIGUIENTE DATA 
-            await usuario.save
+            await usuario.save()
+            console.log(`Se agregó a ${nombre} a la base de datos`)
         }
         if (!usuario.estado) {
             return res.status(401).json({
