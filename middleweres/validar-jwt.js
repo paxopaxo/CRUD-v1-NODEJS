@@ -4,8 +4,6 @@ const Usuario = require('../models/usuarioSchema')
 
 const validarJWT = async(req = request, res = response, next) => {
     const token = req.header('x-token')
-
-    console.log(token)
     if (!token) {
         return res.status(401).json({
             msg: 'No hay token para la petición'
@@ -33,7 +31,7 @@ const validarJWT = async(req = request, res = response, next) => {
     } catch (error) {
         console.log(error)
         res.status(401).json({
-
+            msg: `Tu sesión ha expirado, inicia sesión nuevamente`
         })
     }
 }

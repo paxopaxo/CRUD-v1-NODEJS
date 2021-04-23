@@ -27,11 +27,9 @@ const tieneRole = (...roles) => { // ...roles devuelve un array con todos los ar
 
         if (!roles.includes(req.usuarioAutenticado.rol)) {
             return res.status(401).json({
-                msg: `El servicio requiere uno de estos roles ${roles}`
+                msg: `El servicio requiere uno de estos roles ${roles.join(' ')}`
             })
         }
-
-        console.log(roles, req.usuarioAutenticado.rol)
         next()
     }
 }

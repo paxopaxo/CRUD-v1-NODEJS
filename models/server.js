@@ -6,9 +6,16 @@ class Server {
     constructor() { // El constructor se ejecuta apenas se crea una instancia de clase 
         this.app = express()
         this.port = process.env.PORT
-        this.usuariosPath = '/api'
-        this.authPath = '/api/auth'
-            // Conectar a la base de datos 
+
+        this.paths = {
+            usuarios: '/api',
+            auth: '/api/auth',
+            categorias: '/api/categorias',
+            productos: '/api/productos',
+            buscar: '/api/buscar'
+        }
+
+        // Conectar a la base de datos 
         this.conectarDB()
             // Middlewares
         this.middlewares()
@@ -30,8 +37,11 @@ class Server {
     }
 
     routes() {
-        this.app.use(this.usuariosPath, require('../routes/user.js'))
-        this.app.use(this.authPath, require('../routes/auth.js'))
+        this.app.use(this.paths.buscar, require('../routes/buscar.js'))
+        this.app.use(this.paths.auth, require('../routes/auth.js'))
+        this.app.use(this.paths.categorias, require('../routes/categorias.js'))
+        this.app.use(this.paths.productos, require('../routes/productos.js'))
+        this.app.use(this.paths.usuarios, require('../routes/user.js'))
     }
     listen() {
         this.app.listen(this.port, () => {

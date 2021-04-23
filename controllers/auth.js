@@ -60,8 +60,8 @@ const googleSignIn = async(req, res = response) => {
             const data = {
                 nombre,
                 correo,
-                img,
                 pass: ':P',
+                img,
                 google: true
             }
 
