@@ -54,11 +54,11 @@ const obtenerTodasCategorias = async(req, res) => {
         .skip(Number(inicio))
         .limit(Number(limite))
     ])
-    const [total, usuarios] = resp
+    const [total, categorias] = resp
 
     res.json({
         total,
-        usuarios
+        categorias
     })
 }
 

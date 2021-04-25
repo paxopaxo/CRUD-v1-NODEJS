@@ -12,6 +12,7 @@ const { validarCampos } = require('./middlewere')
 const { validarJWT } = require('./validar-jwt')
 const { verificarAdmin, tieneRole } = require('./verificar-admin')
 const { verifica_query_limites } = require('./verifica-query-limite-inicio')
+const { validarArchivoSubir } = require('./validar-archivo')
 
 
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
     tieneRole,
     validarCampos,
     validarJWT,
-    verifica_query_limites
+    verifica_query_limites,
+    validarArchivoSubir
 }

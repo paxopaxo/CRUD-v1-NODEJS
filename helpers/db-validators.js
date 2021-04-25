@@ -33,11 +33,19 @@ const existeProductoConElNombre = async(nombre) => {
         throw new Error(`El producto ${existeProducto.nombre} ya existe`)
     }
 }
+const coleccionesPermitidas = (coleccion = '', colecciones = []) => {
+    const incluida = colecciones.includes(coleccion)
+    if (!incluida) {
+        throw new Error(`La coleccion ${coleccion} no está permitida`)
+    }
+    return true
+}
 
 module.exports = {
     esRolValido,
     emailExiste,
     existeIdEnMiDB,
     existeCategoriaEnMiDB,
-    existeProductoConElNombre
+    existeProductoConElNombre,
+    coleccionesPermitidas
 }

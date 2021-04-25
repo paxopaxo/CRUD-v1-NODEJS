@@ -60,14 +60,14 @@ const obtenerTodosProductos = async(req, res) => {
 
     const filter = { estado: true }
 
-    const resp = await Promise.all([
-        Categoria.countDocuments(filter), // cuenta cuantos docuemntos cumplen condicion
-        Categoria.find(filter) //duelve todo lo que encaje con el filtro
-        .populate('usuario', 'nombre')
+    const [total, usuarios] = await Promise.all([
+        Producto.countDocuments(filter), // cuenta cuantos docuemntos cumplen condicion
+        Producto.find(filter) //duelve todo lo que encaje con el filtro
         .skip(Number(inicio))
+        .populate('usuario', 'nombre')
+        .populate('categoria', 'nombre')
         .limit(Number(limite))
     ])
-    const [total, usuarios] = resp
 
     res.json({
         total,

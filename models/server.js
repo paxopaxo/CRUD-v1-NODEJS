@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+const fileUpload = require('express-fileupload')
 const { dbConnection } = require('../database/config')
 
 class Server {
@@ -12,7 +13,8 @@ class Server {
             auth: '/api/auth',
             categorias: '/api/categorias',
             productos: '/api/productos',
-            buscar: '/api/buscar'
+            buscar: '/api/buscar',
+            uploads: '/api/uploads'
         }
 
         // Conectar a la base de datos 
@@ -34,6 +36,12 @@ class Server {
             // directorio público
         this.app.use(express.static('public'))
 
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
+
     }
 
     routes() {
@@ -41,11 +49,12 @@ class Server {
         this.app.use(this.paths.auth, require('../routes/auth.js'))
         this.app.use(this.paths.categorias, require('../routes/categorias.js'))
         this.app.use(this.paths.productos, require('../routes/productos.js'))
+        this.app.use(this.paths.uploads, require('../routes/uploads.js'))
         this.app.use(this.paths.usuarios, require('../routes/user.js'))
     }
     listen() {
         this.app.listen(this.port, () => {
-            console.log('Servidor corriendo en el puerto ', this.port)
+            console.log('Servidor corriendo en el puerto', this.port)
         })
     }
 
